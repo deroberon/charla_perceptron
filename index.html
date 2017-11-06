@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>reveal.js</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<!--<link rel="stylesheet" href="plugin/toc-progress/toc-progress.css">-->
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section data-background="cerebro.jpg">
+					<h1>Perceptron</h1>
+				</section>
+				<section>
+					<h2>Modelos</h2>
+						- McCulloch and Pitts (1943) <br/>
+						- Hebb (1949) <br/>
+						- Rosenblatt (1958) <br/> 
+				</section>
+				<section>
+					<h1>Neurona</h1>
+				</section>
+				<section>
+					<h2>Modelos</h2>
+					<img src="completeneuron.png" width="80%">
+				</section>
+				<section>
+					<h2>Problema</h2>
+					Dado un conjunto de <i>inputs</i> $x(i)$ y una salida (<i>output</i>) $d(i)$ de un sistema dinamico <b>desconocido</b>, desarollar un sistema que, dado las entradas $x(i)$ producir una salida $y(i)$ tal que $y(i)$ sea lo mas similar posible a $d(i)$.
+				</section>
+				<section>
+					<h2>Mis Actores hasta ahora</h2>
+					<span class="fragment">- $i$: un dado momento en el tiempo<br/></span>
+					<span class="fragment">- $m$: la <i>dimensionalidad de las entradas</i><br/></span>
+					<span class="fragment">- $x(i)$: un vector de dimension $m$ representando las entradas en el tiempo $i$ (<i>inputs</i>)<br/></span>
+					<span class="fragment">- $d(i)$: un número real representando la salida del sistema desconocido en el tiempo $i$ (<i>output</i>)<br/></span>
+					<span class="fragment">- $y(i)$: un número real representando la salida del sistema a simular el desconocido en el tiempo $i$ (<i>prevision</i>)<br/></span>
+				</section>
+				<section>
+					<h2>Menos sobre problema, mas sobre perceptrons</h2>
+					Para transformar $x(i)$, una entrada $m$-dimensional en una salida $y(i)$, escalar, la neurona necesita algunos factores internos. La neurona mas sensilla tiene:<br/>
+					<span class="fragment">$w(i)$: un vector $m$-dimensional con los pesos para el vector $x(i)$</span>
+				</section>
+				<section>
+					<img src="perceptron.png">
+				</section>
+				<section>
+					<h2>Una Notación</h2>
+					Antes de seguir, llamaremos de $x_n(i)$ el $n$-esimo elemento ($ 1 \leq n \leq m$) elemento de $x(i)$. <br/>
+					Analogamente, lo haremos para $w(i)$ y otros vectores.
+				</section>
+				<section>
+					<h2>Flujo de Sinales</h2>
+					<p>Podemos dividir el Flujo de sinales en nuestro perceptron en dos procesos:</p>
+					<span class="fragment">-Filtración: entra $x(i)$ y sale $y(i)$<br/></span>
+					<span class="fragment">-Adaptación: entra $d(i)$, $y(i)$ y $w(i)$ y el perceptron adapta su $w(i+1)$<br/></span>
+				</section>
+				<section>
+					<h2>Y como llego al $y(i)$ ?</h2>
+					<span class="fragment"><p>$y(i)=x^T(i)w(i)$</p></span>
+					<span class="fragment"><p>$y(i)=\sum_{k=1}^m w_k(i)x_k(i)$</p></span>
+				</section>
+				<section>
+					<h2>Y como llego al $w(i+1)$ ?</h2>
+					<span class="fragment"><p>Bueno... Esta es una pregunta mucho mas compleja... Pero vamos empezar por el início, definindo el error</p></span>
+					<span class="fragment"><p>$e(i)=d(i)-y(i)$</p></span>
+				</section>
+				<section>
+					<h2>Funcción Costo</h2>
+					<p>Vamos empezar a definir una función llamada Costo: $\epsilon(w)$</p>
+					<span class="fragment"><p>Definamos ahora un vector peso $w*$ como óptimo.</p></span>
+					<span class="fragment"><p>La funcción $\epsilon$ esta definida de tal manera que: $\epsilon(w*) \leq \epsilon(w)$</p></span>
+				</section>
+				<section>
+					<h2>Condicción de Optimalidad</h2>
+					<p>$\nabla \epsilon(w*)=0$</p>
+					<p>Pero que es $\nabla$?</p>
+				</section>
+				<section>
+					<h2>$\nabla$ es un... Operador</h2>
+					<span class="fragment"><p>Operador es una transformación que se aplica en una función</p></span>
+					<span class="fragment"><p>También es conocido como Gradiente</p></span>
+					<span class="fragment"><p>$\nabla=[\frac{\delta}{\delta w_1},\frac{\delta}{\delta w_2},\frac{\delta}{\delta w_3},...,\frac{\delta}{\delta w_m}]^T$</p></span>
+				</section>
+				<section>
+					<h2>Y que nos importa $\nabla$?</h2>
+					<span class="fragment"><p>$\nabla \epsilon(w)=[\frac{\delta \epsilon}{\delta w_1},\frac{\delta \epsilon}{\delta w_2},\frac{\delta \epsilon}{\delta w_3},...,\frac{\delta \epsilon}{\delta w_m}]^T$</p></span>
+					<span class="fragment"><p>Asi, si garantizamos que: $\epsilon(w(n+1)) \leq \epsilon(w(n))$, en un dado momento, $w(i)$ va a convergir para $w*$</p></span>
+					<span class="fragment"><p>Para simplificar, llamaremos $g(i)=\nabla \epsilon(w(i))$</p></span>
+				</section>
+				<section>
+					<h1>Metodos de optimización</h1>
+				</section>
+				<section>
+					<h2>Método de Steepest Descent</h2>
+					<p>$w(n+1)=w(n)-\mu g(n)$</p>
+					<span class="fragment">
+						<p>Llamamos $\mu$ a la constante de aprendizado (<i>learning rate</i>)</p></span>
+					<span class="fragment"><p>Asi, podemos definir la <i>corrección</i> aplicada en $w(n)$ para generar $w(n+1)$ como:</p>
+					<p>$\Delta w(n)=w(n+1)-w(n)=-\mu g(n)$</p>
+					</span>
+				</section>
+				<section data-background="matematica.gif">
+					<h1>Recordando la matematica</h1>
+				</section>
+				<section>
+					<h3>Relembrando Taylor...</h3>
+					<span class="fragment">
+						<p>Para una aproximacón linear, teniamos:</p>
+						<p>$f(x) \approx f(a)+\frac{\delta f(a)}{\delta x}(x-a)$</p>
+					</span>
+					<span class="fragment">
+						<p>Generalizando, teniamos:</p>
+						<p>$f(x) \approx f(a)+\frac{\delta f(a)}{\delta x}(x-a)+\frac{1}{2!}\frac{\delta^2 f(a)}{(\delta x)^2}(x-a)^2+...+\frac{1}{k!}\frac{\delta^k f(a)}{(\delta x)^k}(x-a)^k$</p>
+					</span>
+				</section>
+				<section>
+					<h3>Agora Taylor Multivariado</h3>
+					<span class="fragment">
+						<p>Si acordamos que ahora $x$ y $a$ son vectores:</p>
+						<p>$f(x) \approx f(a)+\nabla f(a)(x-a)$</p>
+					</span>
+					<span class="fragment">
+						<p>La generalización es un problema matemático mas complejo (pero si estas curioso, lealo <a href="taylor2.pdf">acá</a>), entonces vamos ver solamente el proximo grado.</p>
+					</span>
+				</section>
+				<section>
+					<h3>Agora Taylor de Grado 2</h3>
+					<span class="fragment"><p>Bueno... ya podemos imaginar... el tamaño del problema. Si $f(x)$ tiene una variavel, para Taylor de grado 1, necesitamos de la primera derivada $(\frac{\delta f(x)}{\delta x})$ de la función $f(x)$. Para grado 2, necesitamos de la segunda derivada $(\frac{\delta^2 f(x)}{(\delta x)^2})$ de la función $f(x)$</p></span>
+
+				</section>
+				<section>
+					<h3>Agora Taylor de Grado 2</h3>
+
+					<span class="fragment"><p>Si $f(x)$ es multivariada, para Taylor de grado 1, necesitamos de un vector ($n$x$1$) llamado $\nabla f(x)$. Para grado 2, necesitaremos de...  una matriz, de grado ($n$x$n$). Para facilitar, llamaremos esta matriz de <i>Hessiano</i> y la denotaremos por $Hf(x)$</p></span>
+				</section>
+				<section>
+					<h3>Y como defino Hessiano?</h3>
+
+					<span class="fragment"><p>
+						$$
+						Hf(x) = 
+						 \begin{pmatrix}
+						  \frac{\delta^2f(x)}{(\delta x_1)^2} & \frac{\delta^2f(x)}{\delta x_1 \delta x_2} & \cdots & \frac{\delta^2f(x)}{\delta x_1 \delta x_n} \\
+						  \frac{\delta^2f(x)}{\delta x_1 \delta x_2} & \frac{\delta^2f(x)}{(\delta x_2)^2} & \cdots & \frac{\delta^2f(x)}{\delta x_2 \delta x_n} \\
+						  \vdots  & \vdots  & \ddots & \vdots  \\
+						  \frac{\delta^2f(x)}{\delta x_n \delta x_1} & \frac{\delta^2f(x)}{\delta x_2 \delta x_2} & \cdots & \frac{\delta^2f(x)}{(\delta x_n)^2} 
+						 \end{pmatrix}
+						$$
+					</p></span>
+				</section>
+				<section>
+					<h3>Taylor Grado 2, finalmente</h3>
+					<span class="fragment"><p>$$f(x) \approx f(a)+\nabla f(a)(x-a)+\frac{1}{2}(x-a)^THf(a)(x-a)$$</p></span>
+				</section>
+				<section data-background="computer.gif">
+					
+				</section>
+				<section>
+					<h3>Volviendo al Steepest Descent</h3>
+					<p>Estabamos parados en que: $\Delta w(n)=w(n+1)-w(n)=-\mu g(n)$, y que teníamos una función costo $\epsilon(w)$ que necesitavamos minimizar, garantizando que $\epsilon(w(n+1))<\epsilon(w(n))$ para que eventualmente lleguemos a encontrar $w*$, se acuerdan? </p>
+					
+				</section>
+				<section>
+					<h3>Pero el problema es...</h3>
+					<span class="fragment"><p>No habia garantias de que haciendo eso, o sea, aplicando un incremento $\Delta w(n)$ de valor $-\mu g(n)$ haga con que $\epsilon(w(n+1)) \leq \epsilon(w(n))$, verdad?</p></span>
+				</section>
+				<section>
+					<h3>Utilizando Taylor</h3>
+					<span class="fragment"><p>Vamos aproximar la función costo $\epsilon(w(n+1))$ utilizando Taylor. Asi, tendremos:</p></span>
+					<span class="fragment"><p>$\epsilon(w(n+1)) \approx  \epsilon(w(n))+\nabla\epsilon(w(n))^T(w(n+1)-w(n))$</p></span>
+					<span class="fragment"><p>$\epsilon(w(n+1)) \approx  \epsilon(w(n))+g^T(n)\Delta w(n)$</p></span>
+					<span class="fragment"><p>$\epsilon(w(n+1)) \approx  \epsilon(w(n))-\mu g^T(n)g(n)$</p></span>
+					<span class="fragment"><p>$\epsilon(w(n+1)) \approx  \epsilon(w(n))-\mu |g(n)|^2$</p></span>
+					<span class="fragment"><p>Por lo tanto: $\epsilon(w(n+1)) \leq \epsilon(w(n))$</span>
+				</section>
+				<section>
+					<h2>Metodo de Newton</h2>
+				</section>
+				<section>
+					<h2>Metodo de Newton y Gauss</h2>
+				</section>
+				<section>
+					<h2>Filtro Linear de los Cuadrados Minimos</h2>
+				</section>
+				<section>
+					<h2>Algunos Otros Metodos</h2>
+				</section>
+				<section>
+					<h2>Least Mean Square (LMS)</h2>
+					<p>Definimos la funcción costo como:</p> 
+					<p>$$\epsilon(w(n))=\frac{1}{2}e^2(n)$$</p>
+					<p>Sendo $e(n)$ un error medido en el tiempo</p>
+				</section>
+				<section>
+					<h3>Derivando $\epsilon(w(n))$</h3>
+					<p>$\frac{\delta \epsilon(w(n))}{\delta w(n)}=e(n)\frac{\delta e(n)}{\delta w(n)}$</p> 
+				</section>
+				<section>
+					<h3>Entonces tengo que definir $e(n)$</h3>
+					<p>Defino $e(n)=d(n)-x^T(n)w(n)$</p> 
+					<p>Desta manera: $\frac{\delta e(n)}{\delta w(n)}=-x^T(n)$</p>
+					<p>Y por lo tanto, $\frac{\delta \epsilon(w(n))}{\delta w(n)}=-x^T(n)e(n)$</p>
+				</section>
+				<section>
+					<h3>Estimando $g(n)$</h3>
+					<p>Podemos utilizar $\frac{\delta \epsilon(w(n))}{\delta w(n)}$ para estimar $g(n)$ </p> 
+					<p>Desta manera: $ \overset{\land}{g(n)}=\frac{\delta \epsilon(w(n))}{\delta w(n)}=-x^T(n)e(n)$</p>
+					<p>Y asi, $\overset{\land}{w}(n+1)=\overset{\land}{w}(n)+\mu x(n)e(n)$</p>	
+				</section>
+				<section>
+					<h3>Pero Note algo....</h3>
+					<p>Ni siempre si puede garantizar que: $\overset{\land}{w}(n+1) \leq \overset{\land}{w}(n)$</p>
+					<p>Motivo por lo cual muchas veces si llama este metodo de <i>metodo estocastico</i>, porque si parece a un <i>randon walk</i></p>
+				</section>
+				<section>
+					<h1>Construyendo el Precursor del Perceptron</h1>
+				</section>
+				<section>
+					<h3>Para empezar</h3>
+					<pre><code data-trim>
+						import numpy as np
+
+						class Perceptron:
+						    m=2
+						    w=np.array([])
+						    mu=0.001
+
+						    def __init__(self,m):
+						        self.m=m
+						        for i in range(0,self.m):
+						            self.w=np.append(self.w,[0.5])
+					</code></pre>
+				</section>
+				<section>
+					<h3>Los dos fujos de datos</h3>
+					<pre><code data-trim>
+						class Perceptron:
+						    def doFilter(self,x):
+						        return np.dot(self.w,x);
+
+						    def doAdjustment(self,x,d):
+						        e=d-self.doFilter(x)
+						        self.w=self.w+self.mu*x*e
+				</code></pre>
+				<p>Note que estamos utilizando LMS</p>
+				</section>
+				<section>
+					<h3>Entrenando</h3>
+					<pre><code data-trim>
+						p=Perceptron(3)
+
+						train=np.array([[0,0,1],[0,1,1],[1,0,1],[1,1,1]])
+						results=np.array([0,0,0,1])
+						for j in range(0,1000):
+						    for i in range(0,4):
+						        p.doAdjustment(train[i],results[i])
+				</code></pre>
+				<p>Note que estamos entrenando para que reconosca AND</p>
+				</section>
+				<section>
+					<h3>Testeando</h3>
+					<pre><code data-trim>
+						print(p.doFilter(np.array([0,0,1])))
+						print(p.doFilter(np.array([0,1,1])))
+						print(p.doFilter(np.array([1,0,1])))
+						print(p.doFilter(np.array([1,1,1])))
+				</code></pre>
+				</section>
+				<section>
+					<h2>Resultado...</h2>
+					<p>Tentamos agora hacerlo con el OR</p>
+				</section>
+				<section>
+					<h2>Resultado... Lindo!!</h2>
+				</section>
+				<section>
+					<h2>Pero hay algo raro... De donde se originó este 1?</h2>
+					<p>El intento, es hacer un clasificador... Pero nuestra función $w(i)x(i)$ no es suficiente. Para Dividir un conjunto de dados necesito de....</p>
+					<p>Una recta!!</p>
+					<p>Y sabemos que la equación de la recta (o hiperplano) es: $w(i)x(i)+b(i)$...</p>
+					<p> Ese $b(i)$ es conocido como <i>Bias</i></p>
+				</section>
+				<section>
+					<h2>Entonces?</h2>
+					<p>$w(i)x(i)+b(i)$ es lo mismo que: $w(i)x(i)+w_{m+1}(i)\frac{b(i)}{w_{m+1}(i)}$</p>
+					<p>Si llamo de $x_{m+1}=\frac{b(i)}{w_{m+1}(i)}$, entonces mi recta si queda: $w(i)x(i)+w_{m+1}(i)x_{m+1}(i)$ que es lo mismo que considerar $x(i)$ con una dimensión a mas, $w(i)$ también con una dimensión a mas, y hacer $w(i)x(i)$, que ya estabamos calculando. </p>
+				</section>
+				<section>
+					<h2>Y Funciona?</h2>
+					<p>Si, pero los valores de $x_{m+1}(i)$ deben ser siempre iguales a $1$. Asi, $x_{m+1}(i)w_{m+1}(i)=w_{m+1}(i)$, y desta manera, $x_{m+1}(i)w_{m+1}(i)\frac{b(i)}{w_{m+1}(i)}=w_{m+1}(i)\frac{b(i)}{w_{m+1}(i)}=b(i)$  </p>
+				</section>
+				<section>
+					<h1>Finalmente, el Perceptron</h1>
+				</section>
+				<section data-background="200w_d.gif">
+					<h3>Que es un Perceptron?</h3>
+					<p>En el nuestro precursor, ya vimos que tenemos una especie de "Distancia" para clasificar una entrada en uno o otro grupo</p>
+					<p>Pero para que eso se paresca a una neurona, es necesario que tome una decision: no me interesa quanto proximo esta de un grupo y si si pertenence a un determinado grupo o no</p>
+					<p>Asi, un perceptron es un clasificador</p>
+					<p>Y por la forma como lo modelamos, es un clasificador linear</p>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				math: {
+		mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+		config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+	},
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/math/math.js', async: true },
+					//{ src: 'plugin/toc-progress/toc-progress.js', async: true, callback: function() { toc_progress.initialize(); toc_progress.create(); } },
+
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
